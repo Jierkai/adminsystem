@@ -1,15 +1,29 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
+import { getTimeStamp } from '@/utils/auth'
 import router from '@/router'
 
+const timeOut = 7200
+
+function isCheckTimeOut() {
+  const dataStamp = +new Date()
+  return (dataStamp - getTimeStamp()) / 1000 > timeOut
+}
+
 const request = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API
+  baseURL: process.env.VUE_APP_BASE_API,
+  timeout: 5000
 })
 request.interceptors.request.use(config => {
   const token = store.state.user.token
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+    if (isCheckTimeOut()) {
+      store.dispatch('user/logout')
+      router.push('/login')
+      return Promise.reject(new Error('Token 到期, 请重新登录'))
+    }
+    config.headers['Authorization'] = `Bearer ${token}`
   }
   return config
 }, err => {
@@ -17,22 +31,21 @@ request.interceptors.request.use(config => {
 }
 )
 
-request.interceptors.response.use(res => {
-  if (res.data.success) {
+request.interceptors.response.use(async res => {
+  const { success, message } = res.data
+  if (success) {
     return res.data
   } else {
-    Message.error(res.data.message)
-    return Promise.reject(new Error(res.data.message))
+    Message.error(message)
+    return Promise.reject(new Error(message))
   }
 }, err => {
-  console.dir(err)
-  if (err.response && err.response.data.code === 10002) {
-    store.dispatch('user/logout')
+  if (err.response && err.response.data && err.response.data.code === 10002) {
     router.push('/login')
-    Message.error(err.response.data.message)
-    return Promise.reject(err.response.data.message)
+    store.dispatch('user/logout')
+  } else {
+    Message.error(err.message)
   }
-  Message.error(err.message)
   return Promise.reject(err.message)
 })
 

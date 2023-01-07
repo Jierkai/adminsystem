@@ -3,13 +3,13 @@ import Router from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
 import approvals from '@/router/modules/approvals'
-import attendances from '@/router/modules/attendances'
 import departments from '@/router/modules/departments'
 import employees from '@/router/modules/employees'
 import permission from '@/router/modules/permission'
+import attendances from '@/router/modules/attendances'
+import salary from '@/router/modules/salary'
 import setting from '@/router/modules/setting'
 import social from '@/router/modules/social'
-import salary from '@/router/modules/salary'
 
 Vue.use(Router)
 
@@ -37,7 +37,7 @@ Vue.use(Router)
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
+const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -46,7 +46,7 @@ export const constantRoutes = [
 
   {
     path: '/404',
-    component: () => import('@/views/404'),
+    component: () => import('@/views/404/404.vue'),
     hidden: true
   },
 
@@ -65,20 +65,21 @@ export const constantRoutes = [
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
-const syncRoutes = [
+const asyncRoutes = [
   approvals,
-  attendances,
   departments,
   employees,
   permission,
+  attendances,
   salary,
   setting,
   social
 ]
+
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...syncRoutes]
+  routes: [...constantRoutes, ...asyncRoutes]
 })
 
 const router = createRouter()

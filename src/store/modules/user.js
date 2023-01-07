@@ -1,5 +1,5 @@
-import { getUserHeaderImage, getUserInfo, login } from '@/api/user'
-import { getToken, removeToken, setToken } from '@/utils/auth'
+import { getInfo, getUserDetail, login } from '@/api/user'
+import { getToken, removeToken, setTimeStamp, setToken } from '@/utils/auth'
 
 const state = {
   token: getToken() || '',
@@ -10,29 +10,31 @@ const mutations = {
     state.token = newToken
     setToken(newToken)
   },
+  LOGOUT(state) {
+    state.token = ''
+    state.userInfo = {}
+  },
   setUserInfo(state, data) {
     state.userInfo = { ...data }
-  },
-  removetoken(state) {
-    state.token = ''
   }
 
 }
 const actions = {
-  getToken(context, data) {
-    return login(data).then(res => context.commit('setToken', res.data))
+  async getToken(context, data) {
+    const res = await login(data)
+    context.commit('setToken', res.data)
+    setTimeStamp()
   },
-  getUserInfo(context) {
-    getUserInfo().then(async res => {
-      const { data: { staffPhoto }} = await getUserHeaderImage(res.data.userId)
-      context.commit('setUserInfo', { ...res.data, staffPhoto })
+  async logout(context) {
+    await removeToken()
+    context.commit('LOGOUT')
+  },
+  async getUserInfo(context) {
+    await getInfo().then(async res => {
+      const result = await getUserDetail(res.data.userId)
+      context.commit('setUserInfo', { ...res.data, staffPhoto: result.data.staffPhoto })
     })
-  },
-  logout(context) {
-    removeToken()
-    context.commit('removetoken')
   }
-
 }
 const getter = {}
 

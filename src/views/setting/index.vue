@@ -2,7 +2,7 @@
 
 <script>
 export default {
-  name: 'Index'
+  name: 'Setting'
 }
 </script>
 

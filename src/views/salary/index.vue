@@ -2,7 +2,7 @@
 
 <script>
 export default {
-  name: 'Employees'
+  name: 'Salarys'
 }
 </script>
 

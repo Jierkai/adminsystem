@@ -8,17 +8,16 @@ export function login(data) {
   })
 }
 
-export function getUserInfo() {
+export function getInfo() {
   return request({
     url: '/sys/profile',
     method: 'post'
   })
 }
 
-export function getUserHeaderImage(id) {
+export function getUserDetail(id) {
   return request({
-    url: `/sys/user/${id}`,
-    method: 'get'
+    url: `/sys/user/${id}`
   })
 }
 

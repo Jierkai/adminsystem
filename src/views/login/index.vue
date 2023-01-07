@@ -129,7 +129,7 @@ export default {
     },
     handleLogin() {
       this.loading = true
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate((valid, val) => {
         if (valid) {
           this.getToken(this.loginForm)
             .then(() => {
@@ -137,7 +137,7 @@ export default {
               const routePath = this.$route.query.redirect || '/'
               this.$router.push(routePath)
             })
-            .catch(() => {
+            .catch((err) => {
               this.loading = false
             })
         }

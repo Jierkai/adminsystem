@@ -7,7 +7,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img v-imgerror="defaultImage" :src="staffPhoto" class="user-avatar">
+          <img v-imageError="defaultImg" :src="staffPhoto" class="user-avatar">
           <span class="name">{{ name }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -44,15 +44,15 @@ export default {
   },
   data() {
     return {
-      defaultImage: require('@/assets/common/head.jpg')
+      defaultImg: require('@/assets/common/head.jpg')
     }
   },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'name',
-      'staffPhoto'
+      'staffPhoto',
+      'name'
     ])
   },
   methods: {
@@ -60,8 +60,9 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      await this.$store.dispatch('user/logout').then(
+        () => this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      )
     }
   }
 }
@@ -123,19 +124,21 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
+        margin-top: 5px;
         position: relative;
-        cursor: pointer;
 
         .user-avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          cursor: pointer;
+          width: 30px;
+          height: 30px;
+          border-radius: 15px;
           vertical-align: middle;
+
         }
 
         .name {
-          color: #fff;
           vertical-align: middle;
+          color: #fff;
           margin-left: 5px;
         }
 

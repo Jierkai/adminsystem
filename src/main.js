@@ -9,10 +9,10 @@ import 'nprogress/nprogress.css'
 import App from './App'
 import store from './store'
 import router from './router'
-import * as directive from '@/directive'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import * as directive from '@/directives'
 
 /**
  * If you don't want to use mock-server
@@ -26,7 +26,10 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
-Object.keys(directive).forEach(i => Vue.directive(i, directive[i]))
+
+Object.keys(directive).forEach(i => {
+  Vue.directive(i, directive[i])
+})
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })

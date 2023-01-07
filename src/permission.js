@@ -3,18 +3,19 @@ import router from '@/router'
 import nprogress from 'nprogress'
 
 const whiteList = ['/404', '/login']
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   const token = store.state.user.token
+
   nprogress.start()
   if (token) {
-    if (!store.getters.name) {
-      store.dispatch('user/getUserInfo')
+    if (!store.getters.userId) {
+      await store.dispatch('user/getUserInfo')
     }
     if (to.path === '/login') {
-      next('/')
+      next('/dashboard')
       nprogress.done()
     } else {
-      next(to.query.redirect)
+      next()
     }
   } else {
     if (whiteList.includes(to.path)) {
@@ -23,6 +24,7 @@ router.beforeEach((to, from, next) => {
       next({ path: '/login', query: { redirect: to.path }})
     }
   }
+  nprogress.done()
 })
 
 router.afterEach((to, from) => {
