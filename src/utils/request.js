@@ -40,7 +40,11 @@ request.interceptors.response.use(async res => {
     return Promise.reject(new Error(message))
   }
 }, err => {
+<<<<<<< HEAD
   if (err.response && err.response.data.code === 10002) {
+=======
+  if (err.response && err.response.data && err.response.data.code === 10002) {
+>>>>>>> e5de052deb053f943197ae2e1f30a027389b2ee3
     router.push('/login')
     store.dispatch('user/logout')
   } else {

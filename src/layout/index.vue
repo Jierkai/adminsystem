@@ -23,8 +23,8 @@ export default {
   components: {
     Navbar,
     Sidebar,
-    AppMain,
-    Breadcrumb
+    Breadcrumb,
+    AppMain
   },
   mixins: [ResizeMixin],
   computed: {
@@ -55,6 +55,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+<
+<
+<
+<
+<
+<
+<
+HEAD
+
 @import "~@/styles/mixin.scss";
 @import "~@/styles/variables.scss";
 
@@ -96,5 +105,4 @@ export default {
 .mobile .fixed-header {
   width: 100%;
 }
-
 </style>
