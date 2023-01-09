@@ -48,7 +48,6 @@ export default {
     operateDepts(type) {
       switch (type) {
         case 'add':
-<<<<<<< HEAD
           this.$emit('showDepts', this.treeNode, '新增')
           break
         case 'del':
@@ -60,24 +59,6 @@ export default {
           break
         case 'edit':
           this.$emit('showDepts', this.treeNode, '编辑')
-=======
-          this.$emit('addDepts', this.treeNode)
-          break
-        case 'del':
-          this.$confirm('确定要删除吗')
-            .then(() => {
-              console.log(this.treeNode.id)
-              delDepartment(this.treeNode.id).then(() => {
-                this.$emit('delDepart')
-                this.$message.success('删除成功')
-              })
-            })
-
-          break
-        case 'edit':
-          break
-        default:
->>>>>>> e5de052deb053f943197ae2e1f30a027389b2ee3
           break
       }
     }

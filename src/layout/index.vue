@@ -55,14 +55,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-<
-<
-<
-<
-<
-<
-<
-HEAD
 
 @import "~@/styles/mixin.scss";
 @import "~@/styles/variables.scss";
