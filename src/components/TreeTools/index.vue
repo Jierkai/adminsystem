@@ -37,6 +37,9 @@ export default {
   props: {
     treeNode: {
       type: Object,
+      default: () => {
+        return {}
+      },
       require: true
     },
     isRoot: {

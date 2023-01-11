@@ -26,6 +26,15 @@ import { getDepartment } from '@/api/department'
 import { tranListToTreeData } from '@/utils/tranListToTreeData'
 import AddDept from '@/components/AddDept/index.vue'
 
+/**
+ * @param defaultProps
+ * @param departs 所有部门以及子部门的数据
+ * @param company 公司简介
+ * @param showDialog 是否展示编辑添加的模态框
+ * @param treeNode 当前选中的节点数据
+ * @param dialogType 当前是编辑还是添加
+ */
+
 export default {
   name: 'Department',
   components: { AddDept, TreeTools },

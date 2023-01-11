@@ -47,9 +47,11 @@
 
 <script>
 import { addDepartment, getDeptDetail, getSimple, updateDept } from '@/api/department'
+import FormRules from '@/mixins/FormRules.js'
 
 export default {
   name: 'AddDept',
+  mixins: [FormRules],
   props: {
     showDialog: {
       type: Boolean,
@@ -69,27 +71,6 @@ export default {
     }
   },
   data() {
-    const checkSameDeptName = (rules, val, callback) => {
-      const id = this.treeNode.id ? this.treeNode.id : ''
-      const filterArr = this.departs.filter(i => i.pid === id)
-      const isHave = filterArr.some(i => i.name === val)
-      if (isHave || val === this.treeNode.name) {
-        callback(new Error('部门名称不可重复'))
-      } else {
-        callback()
-      }
-    }
-    const checkSameDeptCode = (rules, val, callback) => {
-      const id = this.treeNode.id ? this.treeNode.id : ''
-      const filterArr = this.departs.filter(i => i.pid === id)
-      console.log(filterArr)
-      const isHave = filterArr.some(i => i.code === val)
-      if (isHave || val === this.treeNode.name) {
-        callback(new Error('部门编码不可重复'))
-      } else {
-        callback()
-      }
-    }
     return {
       simpleList: [],
       formData: {
@@ -97,25 +78,6 @@ export default {
         manager: '',
         introduce: '',
         name: ''
-      },
-      rules: {
-        name: [
-          { required: true, message: '部门名称不能为空', trigger: ['blur', 'change'] },
-          { min: 1, max: 50, message: '部门名称要求1-50个字符', trigger: ['blur', 'change'] },
-          { validator: checkSameDeptName, message: '部门名称不可重复', trigger: ['blur'] }
-        ],
-        code: [
-          { required: true, message: '部门编码不能为空', trigger: ['blur', 'change'] },
-          { min: 1, max: 50, message: '部门编码要求1-50个字符', trigger: ['blur', 'change'] },
-          { validator: checkSameDeptCode, message: '部门名称不可重复', trigger: ['blur'] }
-        ],
-        manager: [
-          { required: true, message: '部门负责人不能为空', trigger: ['blur', 'change'] }
-        ],
-        introduce: [
-          { required: true, message: '部门介绍不能为空', trigger: ['blur', 'change'] },
-          { min: 1, max: 300, message: '部门介绍要求1-300个字符', trigger: ['blur', 'change'] }
-        ]
       },
       loading: false
     }
@@ -131,7 +93,6 @@ export default {
         if (this.dialogType === '编辑') {
           const res = await getDeptDetail(this.treeNode.id)
           this.formData = { ...res.data }
-          console.log(this.formData)
           return
         }
         this.formData.pid = newVal.id ? newVal.id : ''
@@ -146,32 +107,31 @@ export default {
       this.loading = false
     },
     closeDialog() {
-      this.$emit('update:showDialog', false)
-      this.formData = {
-        code: '',
-        manager: '',
-        introduce: '',
-        name: ''
-      }
-    },
-    async commitForm(fn, title) {
-      const res = await fn(this.formData)
-      console.log(res)
+      this.formData = { code: '', manager: '', introduce: '', name: '' }
       this.$refs.deptForm.resetFields()
-      this.$message.success(`${title}部门成功`)
       this.$emit('update:showDialog', false)
+    },
+    // 公共表单提交方法
+    async commitForm(fn, title) {
+      await fn(this.formData)
+      this.$message.success(`${title}部门成功`)
+      this.closeDialog()
       this.$emit('updateDepts')
     },
+    // 确定提交方法
     async commit() {
-      switch (this.dialogType) {
-        case '新增':
-          this.treeNode?.id ? this.formData.pid = this.treeNode.id : this.formData.pid = ''
-          this.commitForm(addDepartment, '添加')
-          break
-        case '编辑':
-          this.commitForm(updateDept, '更新')
-          break
-      }
+      this.$refs.deptForm.validate(valid => {
+        if (!valid) return false
+        switch (this.dialogType) {
+          case '新增':
+            this.treeNode?.id ? this.formData.pid = this.treeNode.id : this.formData.pid = ''
+            this.commitForm(addDepartment, '添加')
+            break
+          case '编辑':
+            this.commitForm(updateDept, '更新')
+            break
+        }
+      })
     }
   }
 }

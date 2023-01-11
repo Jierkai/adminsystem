@@ -1,8 +1,15 @@
-<template />
+<template>
+  <el-card>
+    <PageTools />
+  </el-card>
+</template>
 
 <script>
+import PageTools from '@/components/PageTools/index.vue'
+
 export default {
-  name: 'Employees'
+  name: 'Employees',
+  components: { PageTools }
 }
 </script>
 
