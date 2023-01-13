@@ -24,6 +24,12 @@ export default {
     showDialog: {
       type: Boolean,
       default: false
+    },
+    treeNode: {
+      type: Object,
+      default: () => {
+        return {}
+      }
     }
   },
   data() {
@@ -46,6 +52,7 @@ export default {
       this.$refs.roleForm.validate(async vaild => {
         if (!vaild) return
         await addRole(this.form)
+        this.$message.success('添加成功')
         this.$emit('updateList')
         this.closeDialog()
       })

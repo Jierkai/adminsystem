@@ -10,6 +10,13 @@ export function getRole(page = 1, pagesize = 5) {
   })
 }
 
+export function getRoleDetail(id) {
+  return request({
+    url: `/sys/role/${id}`,
+    method: 'get'
+  })
+}
+
 export function addRole(data) {
   return request({
     url: '/sys/role',
@@ -26,7 +33,6 @@ export function removeRole(id) {
 }
 
 export function getComponyInfo(id) {
-  console.log(id)
   return request({
     url: `/company/${id}`,
     method: 'get'

@@ -2,17 +2,15 @@
   <div class="page-tools">
     <!-- 左侧 -->
     <div class="left">
-      <div class="tips">
+      <div v-if="$slots.text" class="tips">
         <i class="el-icon-info" />
-        <span>当前共有XXXX条记录</span>
+        <slot name="text" />
       </div>
     </div>
     <div class="right">
       <!-- 右侧 -->
-      <el-button size="small" type="primary">普通Excel导出</el-button>
-      <el-button size="small" type="primary">Excel导出</el-button>
-      <el-button size="small" type="primary">Excel导入</el-button>
-      <el-button size="small" type="primary">新增员工</el-button>
+      <slot name="button" />
+
     </div>
   </div>
 </template>

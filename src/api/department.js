@@ -1,8 +1,14 @@
 import request from '@/utils/request'
 
+/**
+ * @method { getDepartment } 获取所有部门
+ * @returns {AxiosPromise}
+ */
+
 export function getDepartment() {
   return request({
-    url: '/company/department'
+    url: '/company/department',
+    method: 'get'
   })
 }
 
