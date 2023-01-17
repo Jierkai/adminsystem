@@ -23,3 +23,10 @@ export function removeEmployee(id) {
   })
 }
 
+export function batchAdd(data) {
+  return request({
+    url: '/sys/user/batch',
+    method: 'post',
+    data
+  })
+}

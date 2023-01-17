@@ -35,7 +35,8 @@ export default {
       immediate: true,
       handler(newVal) {
         const isHave = this.tags.findIndex(i => i.path === newVal.path)
-        if (isHave !== -1) return
+        if (isHave !== -1 || !newVal.meta?.title) return
+
         this.tags.push({
           name: newVal.meta.title,
           path: newVal.path

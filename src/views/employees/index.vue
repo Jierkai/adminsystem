@@ -6,8 +6,8 @@
           <span>总记录数: {{ total }}</span>
         </template>
         <template #button>
-          <el-button size="small" type="warning">excel导入</el-button>
-          <el-button size="small" type="danger">excel导出</el-button>
+          <el-button size="small" type="warning" @click="$router.push('/import')">excel导入</el-button>
+          <el-button size="small" type="danger" @click="exportExcel">excel导出</el-button>
           <el-button size="small" type="primary" @click="isShow = true">新增员工</el-button>
         </template>
       </PageTools>
@@ -59,6 +59,7 @@
 import { removeEmployee, reqEmployeeList } from '@/api/employee'
 import employees from '@/constant/employees'
 import AddEmployee from '@/views/employees/components/AddEmployee.vue'
+import moment from 'moment'
 
 /**
  * @param employeeList 所有员工数据
@@ -92,6 +93,57 @@ export default {
       await this.getEmployeeList(val, this.pageSize)
       this.loading = false
     },
+    async exportExcel() {
+      const excel = await import('@/vendor/Export2Excel')
+      const { data: { rows }} = await reqEmployeeList(1, this.total)
+      const headersArr = ['姓名', '手机号', '入职日期', '聘用形式', '转正日期', '工号', '部门']
+      const merges = ['A1:A2', 'B1:F1', 'G1:G2']
+      const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']]
+      const headersRelations = {
+        '姓名': 'username',
+        '手机号': 'mobile',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
+      const dataArr = this.formatJson(rows, headersRelations, headersArr)
+      excel.export_json_to_excel({
+        header: headersArr, // 表格的头部
+        // 二维数组 [ [], [], [] ]
+        data: dataArr,
+        filename: '学生信息表', // 导出的excel文件名
+        autoWidth: true, // 是否开启单元格宽度自适应
+        bookType: 'xlsx', // 类型
+        multiHeader,
+        merges
+      })
+    },
+    formatJson(rows, userRelations, headersArr) {
+      const { hireType } = employees
+      return rows.map(i => {
+        const arr = []
+        headersArr.forEach(key => {
+          const property = userRelations[key]
+          if (property === 'formOfEmployment') {
+            const value = hireType.find(val => val.id === i[property])
+            const type = value?.value || ''
+            arr.push(type)
+            return
+          } else if (property === 'correctionTime' || property === 'timeOfEntry') {
+            const timeValue = this.formData(i[property]) ? this.formData(i[property]) : '暂无信息'
+            arr.push(timeValue)
+            return
+          }
+          arr.push(i[property])
+        })
+        return arr
+      })
+    },
+    formData(data) {
+      return moment(data).format('YYYY年MM月DD日')
+    },
     changePageSize(val) {
       this.pageSize = val
       this.getEmployeeList(1, this.pageSize)
@@ -113,6 +165,7 @@ export default {
           console.log(row)
         })
     }
+
   }
 }
 </script>
