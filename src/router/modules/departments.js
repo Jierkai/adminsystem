@@ -6,7 +6,7 @@ export default {
   children: [
     {
       path: '',
-      name: 'departments',
+      name: 'Departments',
       component: () => import('@/views/departments'),
       meta: {
         title: '部门',

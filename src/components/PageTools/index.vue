@@ -1,5 +1,5 @@
 <template>
-  <div class="page-tools">
+  <el-card class="page-tools">
     <!-- 左侧 -->
     <div class="left">
       <div v-if="$slots.text" class="tips">
@@ -10,9 +10,8 @@
     <div class="right">
       <!-- 右侧 -->
       <slot name="button" />
-
     </div>
-  </div>
+  </el-card>
 </template>
 
 <script>
@@ -23,9 +22,13 @@ export default {
 
 <style lang="scss" scoped>
 .page-tools {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  ::v-deep {
+    .el-card__body {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
 
   .tips {
     line-height: 34px;

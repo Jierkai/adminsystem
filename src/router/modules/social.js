@@ -1,7 +1,7 @@
 import Layout from '@/layout/index.vue'
 
 export default {
-  path: '/social',
+  path: '/social_securitys',
   component: Layout,
   children: [
     {

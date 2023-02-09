@@ -1,11 +1,11 @@
 import Layout from '@/layout/index.vue'
 
 export default {
-  path: '/setting',
+  path: '/settings',
   component: Layout,
   children: [
     {
-      name: 'setting',
+      name: 'Setting',
       path: '',
       component: () => import('@/views/setting'),
       meta: {

@@ -15,13 +15,17 @@
       <el-table-column label="描述" prop="description" />
       <el-table-column label="操作">
         <template #default="{row}">
-          <el-button size="small" type="success">分配权限</el-button>
+          <el-button size="small" type="success" @click="permissionDialog(row.id)">分配权限</el-button>
           <el-button size="small" type="primary" @click="getDetail(row)">编辑</el-button>
           <el-button size="small" type="danger" @click="removeRole(row)">删除</el-button>
         </template>
 
       </el-table-column>
     </el-table>
+    <SettingPermissionDialog
+      :permission-id="permissionId"
+      :show-assign-dialog.sync="showAssignDialog"
+    />
     <!--            分页-->
     <div class="block">
       <el-pagination
@@ -40,19 +44,24 @@
 
 <script>
 import { getRole, getRoleDetail, removeRole } from '@/api/setting'
+import SettingPermissionDialog from '@/views/setting/components/SettingPermissionDialog.vue'
 
 export default {
   name: 'ManageRole',
+  components: { SettingPermissionDialog },
   data() {
     return {
       loading: false,
       page: 1,
       pageSize: 5,
       roles: [],
-      total: 0
+      total: 0,
+      showAssignDialog: false,
+      permissionId: ''
     }
   },
   created() {
+    console.log('create')
     this.page = this.$route.query.page || 1
     this.getRolesList(this.page, this.pageSize)
   },
@@ -105,6 +114,10 @@ export default {
     },
     showDialog(row = {}) {
       this.isShow = true
+    },
+    permissionDialog(id) {
+      this.showAssignDialog = true
+      this.permissionId = id
     }
 
   }

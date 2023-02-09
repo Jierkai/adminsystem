@@ -30,10 +30,10 @@ const actions = {
     context.commit('LOGOUT')
   },
   async getUserInfo(context) {
-    await getInfo().then(async res => {
-      const result = await getUserDetail(res.data.userId)
-      context.commit('setUserInfo', { ...res.data, staffPhoto: result.data.staffPhoto })
-    })
+    const userInfo = await getInfo()
+    const result = await getUserDetail(userInfo.data.userId)
+    context.commit('setUserInfo', { ...userInfo.data, staffPhoto: result.data.staffPhoto })
+    return userInfo.data.roles.menus
   }
 }
 const getter = {}

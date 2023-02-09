@@ -5,7 +5,8 @@
         <el-tag
           v-for="tag in tags"
           :key="tag.name"
-          :effect="isActive(tag.name)"
+          :class="{isActive}"
+          :effect="isActive(tag.name)?'dark' : 'plain'"
           :hit="true"
           :type="tag.type"
           class="breadcrumb-item"
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'Breadcrumb',
   data() {
@@ -34,13 +36,14 @@ export default {
     $route: {
       immediate: true,
       handler(newVal) {
-        const isHave = this.tags.findIndex(i => i.path === newVal.path)
+        const isHave = this.tags.findIndex(i => i.name === newVal.meta.title)
         if (isHave !== -1 || !newVal.meta?.title) return
-
         this.tags.push({
           name: newVal.meta.title,
+          routeName: newVal.name,
           path: newVal.path
         })
+        this.$store.commit('app/getRouteName', this.tags)
       }
     }
   },
@@ -59,7 +62,7 @@ export default {
       }
     },
     isActive(name) {
-      return this.$route.meta.title === name ? 'dark' : 'plain'
+      return this.$route.meta.title === name
     }
   }
 }
@@ -68,9 +71,16 @@ export default {
 <style lang="scss" scoped>
 .breadcrumb-col {
   padding: 5px 8px;
+  background: white;
+  box-shadow: 0 2px 3px 0 #ccc;
+}
+
+.el-tag {
+  padding: 0 10px 0 15px;
 }
 
 .breadcrumb-item {
+  position: relative;
   margin-left: 3px;
   border-radius: 0;
   cursor: pointer;
@@ -86,5 +96,18 @@ export default {
       cursor: text;
     }
   }
+}
+
+.isActive::before {
+  content: '';
+  display: block;
+  position: absolute;
+  background: white;
+  width: 10px;
+  height: 10px;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 100%;
 }
 </style>

@@ -1,11 +1,11 @@
 import Layout from '@/layout/index.vue'
 
 export default {
-  path: '/salary',
+  path: '/salarys',
   component: Layout,
   children: [
     {
-      name: 'salary',
+      name: 'Salary',
       path: '',
       component: () => import('@/views/salary'),
       meta: {

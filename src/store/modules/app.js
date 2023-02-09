@@ -5,7 +5,8 @@ const state = {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     withoutAnimation: false
   },
-  device: 'desktop'
+  device: 'desktop',
+  routercatch: []
 }
 
 const mutations = {
@@ -25,6 +26,13 @@ const mutations = {
   },
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
+  },
+  getRouteName(state, routes) {
+    const arr = []
+    routes.forEach(i => {
+      arr.push(i.routeName)
+    })
+    state.routercatch = [...arr]
   }
 }
 

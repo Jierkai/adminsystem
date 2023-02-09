@@ -25,6 +25,14 @@ export function addRole(data) {
   })
 }
 
+export function setRole(data) {
+  return request({
+    url: '/sys/user/assignRoles',
+    method: 'put',
+    data
+  })
+}
+
 export function removeRole(id) {
   return request({
     url: `/sys/role/${id}`,

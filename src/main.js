@@ -3,7 +3,6 @@ import Vue from 'vue'
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 import '@/styles/index.scss' // global css
 import 'nprogress/nprogress.css'
 import App from './App'
@@ -15,12 +14,20 @@ import '@/permission' // permission control
 import * as directive from '@/directives'
 import plugin from '@/components/Plugin'
 import filter from '@/filter'
+import FullScreen from '@/components/FullScreen/index.vue'
+import '@/styles/element-variables.sass'
+import i18n from '@/utils/lang'
+
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
  * you can execute: mockXHR()
  *
- * Currently MockJs will be used in the production environment,
+ * Currently, MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
 if (process.env.NODE_ENV === 'production') {
@@ -37,15 +44,15 @@ Object.keys(filter).forEach(i => {
 })
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+Vue.use(ElementUI)
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
-
+Vue.component('FullScreen', FullScreen)
 Vue.config.productionTip = false
 
 new Vue({
   el: '#app',
-  router,
   store,
+  router,
   render: h => h(App)
 })

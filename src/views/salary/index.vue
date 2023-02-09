@@ -1,4 +1,6 @@
-<template />
+<template>
+  <div>Salarys</div>
+</template>
 
 <script>
 export default {

@@ -16,6 +16,16 @@
         <el-table :data="employeeList" border>
           <el-table-column label="序号" sortable="" type="index" />
           <el-table-column label="姓名" prop="username" sortable="" />
+          <el-table-column label="头像">
+            <template v-slot="scope">
+              <el-image
+                :src="scope.row.staffPhoto"
+                fit="cover"
+                style="width: 80px; height: 80px"
+                @click="showCode(scope.row.staffPhoto)"
+              />
+            </template>
+          </el-table-column>
           <el-table-column label="手机号" prop="mobile" sortable="" />
           <el-table-column label="工号" prop="workNumber" sortable="" />
           <el-table-column :formatter="formatterEmpolyee" label="聘用形式" prop="formOfEmployment" sortable="" />
@@ -27,15 +37,17 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" sortable="" width="280">
             <template #default="{row}">
-              <el-button size="small" type="text">查看</el-button>
+              <el-button size="small" type="text" @click="$router.push(`/employees/detail/${row.id}`)">查看</el-button>
               <el-button size="small" type="text">转正</el-button>
               <el-button size="small" type="text">调岗</el-button>
               <el-button size="small" type="text">离职</el-button>
-              <el-button size="small" type="text">角色</el-button>
-              <el-button size="small" type="text" @click="remove(row)">删除</el-button>
+              <el-button size="small" type="text" @click="showRoleDialogFn(row)">角色</el-button>
+              <el-button :disabled="isTrue('1')" size="small" type="text" @click="remove(row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
+        <qrcode-dialog :show-code-dialog.sync="showCodeDialog" :url-data="urlData" />
+        <AssignRole :is-show.sync="showRoleDialog" :user-i-d="UserId" />
         <!-- 分页组件 -->
         <div style="height: 60px; margin-top: 10px">
           <el-pagination
@@ -60,6 +72,8 @@ import { removeEmployee, reqEmployeeList } from '@/api/employee'
 import employees from '@/constant/employees'
 import AddEmployee from '@/views/employees/components/AddEmployee.vue'
 import moment from 'moment'
+import QrcodeDialog from '@/components/qrcodeDialog/index.vue'
+import AssignRole from '@/views/employees/components/AssignRole.vue'
 
 /**
  * @param employeeList 所有员工数据
@@ -67,18 +81,25 @@ import moment from 'moment'
  */
 export default {
   name: 'Employees',
-  components: { AddEmployee },
+  components: { AssignRole, QrcodeDialog, AddEmployee },
   data() {
     return {
       employeeList: [],
       total: 0,
       pageSize: 10,
       page: 1,
-      isShow: false
+      isShow: false,
+      showCodeDialog: false,
+      showRoleDialog: false,
+      urlData: '',
+      UserId: ''
     }
   },
   created() {
     this.getEmployeeList(1)
+  },
+  activated() {
+    this.getEmployeeList(this.page)
   },
   methods: {
     async getEmployeeList(page) {
@@ -148,7 +169,7 @@ export default {
       this.pageSize = val
       this.getEmployeeList(1, this.pageSize)
     },
-    formatterEmpolyee(row, column, cellValue, index) {
+    formatterEmpolyee(row, column, cellValue) {
       const { hireType } = employees
       const type = hireType.find(i => i.id === cellValue)
       if (!type) {
@@ -162,10 +183,20 @@ export default {
         .then(async _ => {
           await removeEmployee(row.id)
           this.getEmployeeList(this.page, this.pageSize)
-          console.log(row)
         })
+    },
+    showCode(data) {
+      this.urlData = data
+      this.showCodeDialog = true
+    },
+    showRoleDialogFn(row) {
+      console.log(row)
+      this.UserId = row.id
+      this.showRoleDialog = true
+    },
+    isTrue(type = '') {
+      return !this.$store.getters.btnDisabled.includes(type)
     }
-
   }
 }
 </script>

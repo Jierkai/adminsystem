@@ -1,7 +1,9 @@
 <template>
   <section class="app-main">
     <transition mode="out-in" name="fade-transform">
-      <router-view :to="{ name }" />
+      <keep-alive :include="routesCatch">
+        <router-view :to="{ name }" />
+      </keep-alive>
     </transition>
   </section>
 </template>
@@ -12,6 +14,9 @@ export default {
   computed: {
     name() {
       return this.$route.name
+    },
+    routesCatch() {
+      return this.$store.state.app.routercatch
     }
   }
 }
@@ -27,7 +32,7 @@ export default {
 }
 
 .fixed-header + .app-main {
-  padding-top: 50px;
+  padding-top: 90px;
 }
 </style>
 

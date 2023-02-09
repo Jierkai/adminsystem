@@ -7,9 +7,9 @@ import departments from '@/router/modules/departments'
 import employees from '@/router/modules/employees'
 import permission from '@/router/modules/permission'
 import attendances from '@/router/modules/attendances'
-import salary from '@/router/modules/salary'
-import setting from '@/router/modules/setting'
-import social from '@/router/modules/social'
+import salarys from '@/router/modules/salary'
+import settings from '@/router/modules/setting'
+import social_securitys from '@/router/modules/social'
 
 Vue.use(Router)
 
@@ -37,7 +37,7 @@ Vue.use(Router)
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-const constantRoutes = [
+export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -61,6 +61,7 @@ const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
+
   {
     path: '/import',
     component: Layout,
@@ -76,21 +77,20 @@ const constantRoutes = [
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
-const asyncRoutes = [
+export const asyncRoutes = [
   approvals,
   departments,
   employees,
   permission,
   attendances,
-  salary,
-  setting,
-  social
+  salarys,
+  settings,
+  social_securitys
 ]
-
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...asyncRoutes]
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()
